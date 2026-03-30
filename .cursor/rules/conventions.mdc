@@ -23,3 +23,9 @@ alwaysApply: false
 
 - kebab-case for files: `element-utils.ts`
 - PascalCase for components: `LayerUI.tsx`
+
+## How to verify
+
+- New components are **functions** (or `forwardRef`), use **`export const`**, props type named **`ComponentNameProps`**, and have **no default export**.
+- **`yarn test:typecheck`** passes; no new **`any`** or **`@ts-ignore`** without explicit justification.
+- Colocated **`ComponentName.test.tsx`** exists when behavior is non-trivial (per team practice).

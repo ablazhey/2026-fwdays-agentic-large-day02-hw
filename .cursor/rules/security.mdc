@@ -1,0 +1,33 @@
+---
+description: "Secure-by-default patterns for XSS, URLs, Vite env, storage, deps — Excalidraw monorepo"
+globs: "**/*.{ts,tsx}"
+alwaysApply: false
+---
+
+# Security (common vulnerabilities)
+
+## Principles
+
+- **XSS:** avoid `dangerouslySetInnerHTML` with untrusted strings; treat iframe/srcDoc/remote HTML as hostile; prefer `toValidURL` / `normalizeLink` from `@excalidraw/common` for links/embeds.
+- **Secrets:** never put API secrets in **`VITE_*`** (client-bundled); no real secrets in committed `.env`.
+- **Deps:** no new npm packages without approval (`AGENTS.md`).
+
+## Review checklist
+
+Use on the **final diff** (or touched flows); each item satisfied or explicitly rejected with rationale.
+
+- **Untrusted HTML / markup:** no `dangerouslySetInnerHTML`, raw `innerHTML`, or `document.write` with user/network content without sanitization or a documented safe pipeline.
+- **Scripts & dynamic code:** no `eval`, `new Function`, or string-constructed scripts from untrusted input.
+- **URLs & navigation:** links, `window.open`, iframe `src`, `srcDoc`, object/embed `data` — validate or normalize (e.g. `toValidURL` / `normalizeLink`); block `javascript:` and unexpected schemes where appropriate.
+- **Paste / file / SVG:** pasted HTML/SVG and imported files treated as untrusted; no execution paths that assume file content is safe.
+- **Client env:** `VITE_*` and other bundled env vars contain no secrets; no production keys in repo-tracked `.env`.
+- **Dependencies:** new packages align with `AGENTS.md` approval; no unnecessary surface for supply-chain risk.
+- **Storage / cookies (if touched):** sensitive data not stored in `localStorage`/`sessionStorage` without justification; `HttpOnly` / server sessions preferred for secrets.
+
+## How to verify
+
+- Re-run the **Review checklist** above on the final diff; each item satisfied or explicitly rejected with rationale.
+- **Spot-check** the diff for `dangerouslySetInnerHTML`, raw `innerHTML`, `eval`, unvalidated URLs into `window.open` / iframe `src`.
+- Confirm **`VITE_*`** usage has no secrets; **`git grep VITE_`** on changed files if needed.
+- Run **`yarn test:typecheck`** and relevant tests / smoke for touched flows (embeds, paste, links, AI/TTD).
+- For UI-heavy changes, **manually** try pasted links, embeds, and new HTML/SVG paths in a dev build.
