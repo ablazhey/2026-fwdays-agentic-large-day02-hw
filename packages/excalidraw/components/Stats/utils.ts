@@ -1,8 +1,10 @@
-import { pointFrom, pointRotateRads } from "@excalidraw/math";
+import { pointFrom, pointRotateRads, round } from "@excalidraw/math";
 
 import {
   getBoundTextElement,
+  getFlipAdjustedCropPosition,
   isBindingElement,
+  isImageElement,
   unbindBindingElement,
 } from "@excalidraw/element";
 import { isFrameLikeElement } from "@excalidraw/element";
@@ -250,4 +252,33 @@ export const getAtomicUnits = (
       });
     });
   return _atomicUnits;
+};
+
+/** Top-left scene coordinates as shown in the Stats panel (includes crop mode). */
+export const getElementDisplayTopLeft = (
+  element: ExcalidrawElement,
+  appState: AppState,
+): { x: number; y: number } => {
+  const [topLeftX, topLeftY] = pointRotateRads(
+    pointFrom(element.x, element.y),
+    pointFrom(element.x + element.width / 2, element.y + element.height / 2),
+    element.angle,
+  );
+  let x = round(topLeftX, 2);
+  let y = round(topLeftY, 2);
+
+  if (
+    appState.croppingElementId === element.id &&
+    isImageElement(element) &&
+    element.crop
+  ) {
+    const flipAdjustedPosition = getFlipAdjustedCropPosition(element);
+
+    if (flipAdjustedPosition) {
+      x = round(flipAdjustedPosition.x, 2);
+      y = round(flipAdjustedPosition.y, 2);
+    }
+  }
+
+  return { x, y };
 };

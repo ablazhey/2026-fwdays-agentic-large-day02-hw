@@ -28,6 +28,7 @@ import FontSize from "./FontSize";
 import MultiAngle from "./MultiAngle";
 import MultiDimension from "./MultiDimension";
 import MultiFontSize from "./MultiFontSize";
+import { ElementCoordinates } from "./ElementCoordinates";
 import MultiPosition from "./MultiPosition";
 import Position from "./Position";
 import { getAtomicUnits } from "./utils";
@@ -111,6 +112,7 @@ StatsRows.displayName = "StatsRows";
 
 Stats.StatsRow = StatsRow;
 Stats.StatsRows = StatsRows;
+Stats.ElementCoordinates = ElementCoordinates;
 
 export const StatsInner = memo(
   ({

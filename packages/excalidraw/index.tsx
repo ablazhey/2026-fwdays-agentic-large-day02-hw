@@ -354,6 +354,8 @@ export {
 export { WelcomeScreen };
 export { LiveCollaborationTrigger };
 export { Stats } from "./components/Stats";
+export { ElementCoordinates } from "./components/Stats/ElementCoordinates";
+export { getElementDisplayTopLeft } from "./components/Stats/utils";
 
 export { DefaultSidebar } from "./components/DefaultSidebar";
 export { TTDDialog } from "./components/TTDDialog/TTDDialog";
